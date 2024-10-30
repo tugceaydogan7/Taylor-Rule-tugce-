@@ -7,6 +7,8 @@ ggplot(data, aes(x = real.gdp, y = inflation)) + geom_point() +  labs(title = "S
 inflation.gap=data$inflation-data$expected.inflation
 output.gap=((data$real.gdp-data$potential.real.gdp)/data$potential.real.gdp)*100
 ggplot(data, aes(x = output.gap, y = inflation.gap)) + geom_point() +  labs(title = "Scatter Plot of Output Gap vs. Inflation Gap", x = "Output Gap", y = "Inflation Gap") + theme_minimal()
+ggplot(data, aes(x = nominal.interest.rate, y = expected.inflation)) + geom_point() +  labs(title = "Scatter Plot of Nominal Interest Rate vs. Expected Inflation", x = "Nominal Interest Rate", y = "Expected Inflation") + theme_minimal()
+ggplot(data, aes(x = nominal.interest.rate, y = real.gdp)) + geom_point() +  labs(title = "Scatter Plot of Nominal Interest Rate vs. Real GDP", x = "Nominal Interest Rate", y = "Real GDP") + theme_minimal()
 data_num= data %>% select(-year)
 cor(data_num)
 summary(data_num)
@@ -22,3 +24,7 @@ model <- auto_ardl(nominal.interest.rate ~ inflation.gap + output.gap +notr.real
 summary (model)
 ggsave("scatter_plot.png")
 ggsave("time_series_plot.png")
+install.packages("urca")
+library(urca)
+bounds_test <- ca.jo(data_nu[c("nominal.interest.rate", "output.gap")], type = "trace", ecdet = "const", spec = "longrun")
+summary(bounds_test)
